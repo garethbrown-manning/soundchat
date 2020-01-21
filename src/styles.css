@@ -1,0 +1,52 @@
+/* Global Styles */
+
+body {
+  padding: 100px 20px 0 20px;
+  font-family: 'Questrial', sans-serif;
+}
+
+.center-layout {
+  max-width: 800px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Header */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #FF9B42;
+}
+
+header a {
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.title-link {
+  font-size: 18px;
+}
+
+/* Intro Page */
+
+img {
+  width: 500px;
+  align-self: center;
+}
