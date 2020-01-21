@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel ./src/index.html --no-cache"
+    "help-serve": "broccoli serve --help",
+    "start": "broccoli serve --port 1234"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "broccoli": "^3.5.0",
+    "broccoli-cli": "^1.0.0"
   }
 }
