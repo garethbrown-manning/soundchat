@@ -13,5 +13,8 @@
   "devDependencies": {
     "broccoli": "^3.5.0",
     "broccoli-cli": "^1.0.0"
+  },
+  "dependencies": {
+    "firebase": "^7.7.0"
   }
 }
