@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "help-serve": "broccoli serve --help",
-    "start": "broccoli serve --port 1234"
+    "start": "broccoli serve --port 1234",
+    "help-build": "broccoli build --help",
+    "build": "broccoli build --output-path build"
   },
   "keywords": [],
   "author": "",
