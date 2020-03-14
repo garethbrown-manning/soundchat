@@ -8,6 +8,9 @@ body {
 .center-layout {
   max-width: 800px;
   margin: auto;
+}
+
+.center-layout, form {
   display: flex;
   flex-direction: column;
 }
@@ -33,6 +36,13 @@ button:hover {
 
 a:hover {
   text-decoration: underline;
+}
+
+input[type="text"], input[type="password"] {
+  border: solid 1px black;
+  padding: 20px;
+  margin: 10px 0;
+  font-size: 16px;
 }
 
 /* Header */
@@ -81,5 +91,10 @@ img {
 
 #signin-facebook {
   background-color: rgb(59, 89, 152);
+  color: white;
+}
+
+#signin-twitter {
+  background-color: rgb(29, 161, 242);
   color: white;
 }
