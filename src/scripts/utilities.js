@@ -14,7 +14,7 @@ export const initializeSigninButtons = () => {
 
   if (signInButton && signOutButton && addTuneButton && mySongsLink) {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+      if (user && !user.isAnonymous) {
         signInButton.style.display = 'none';
         signOutButton.style.display = 'inline-block';
         addTuneButton.style.display = 'inline-block';
