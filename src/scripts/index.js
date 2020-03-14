@@ -6,10 +6,12 @@ import {
   facebookSignin,
   twitterSignin,
   emailSignin,
-  createEmailSigninAccount
+  createEmailSigninAccount,
+  anonymousSignin
 } from '../firebase/firebaseAuthentication';
 
 initializeSigninButtons();
+anonymousSignin();
 
 assignClick('signin-google', googleSignin);
 assignClick('signin-facebook', facebookSignin);

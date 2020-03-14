@@ -39,3 +39,13 @@ export const createEmailSigninAccount = (email, password) => {
     .then(() => console.log('User successfully created an account with email and password'))
     .catch((error) => console.error('There was an error while creating a new user with email and password: ', error));
 }
+
+export const anonymousSignin = () => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+      firebase.auth().signInAnonymously()
+        .then(() => console.log('User successfully signed in anonymously'))
+        .catch((error) => console.error('There was an error while signing in anonymously: ', error));
+    }
+  });
+}
