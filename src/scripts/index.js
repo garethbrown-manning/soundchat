@@ -9,6 +9,7 @@ import {
   createEmailSigninAccount,
   anonymousSignin
 } from '../firebase/firebaseAuthentication';
+import { writeSongToFirestore } from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
 anonymousSignin();
@@ -35,5 +36,15 @@ if (createEmailSigninForm) {
     const email = event.target['email-input'].value;
     const password = event.target['password-input'].value;
     createEmailSigninAccount(email, password);
+  }
+}
+
+const createTuneForm = document.getElementById('add-tune-form');
+if (createTuneForm) {
+  createTuneForm.onsubmit = (event) => {
+    event.preventDefault();
+    const songArtist = event.target['artist-input'].value;
+    const songTitle = event.target['song-title-input'].value;
+    writeSongToFirestore(songArtist, songTitle);
   }
 }
