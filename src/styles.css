@@ -98,3 +98,14 @@ img {
   background-color: rgb(29, 161, 242);
   color: white;
 }
+
+/* My Songs */
+
+.song-container {
+  margin-bottom: 40px;
+}
+
+.song-container button {
+  margin: 0 10px 0 0;
+  padding: 10px 20px;
+}

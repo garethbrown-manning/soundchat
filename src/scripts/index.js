@@ -1,5 +1,5 @@
 import '../firebase/firebaseConfiguration';
-import { assignClick, initializeSigninButtons } from './utilities';
+import { assignClick, initializeSigninButtons, addSongToMySongs } from './utilities';
 import {
   googleSignin,
   signOut,
@@ -9,7 +9,7 @@ import {
   createEmailSigninAccount,
   anonymousSignin
 } from '../firebase/firebaseAuthentication';
-import { writeSongToFirestore } from '../firebase/firebaseRepository';
+import { writeSongToFirestore, readSongsFromFirestore } from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
 anonymousSignin();
@@ -47,4 +47,14 @@ if (createTuneForm) {
     const songTitle = event.target['song-title-input'].value;
     writeSongToFirestore(songArtist, songTitle);
   }
+}
+
+const mySongsComponent = document.getElementById('my-songs-component');
+if (mySongsComponent) {
+  readSongsFromFirestore()
+    .then((songs) => {
+      songs.forEach((song) => {
+        addSongToMySongs(mySongsComponent, song);
+      });
+    });
 }
