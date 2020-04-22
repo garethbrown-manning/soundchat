@@ -22,3 +22,25 @@ export const writeSongToFirestore = (songArtist, songTitle) => {
     }
   });
 }
+
+export const readSongsFromFirestore = () => {
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const songs = [];
+        
+        // Get the collection of songs for the current user.
+        const songsCollection = firestoreDb.collection(`users/${user.uid}/songs`);
+  
+        // Get all song documents from the song collection.
+        songsCollection.get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              songs.push(doc.data());
+            });
+            resolve(songs);
+          });
+      }
+    });
+  });
+}

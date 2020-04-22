@@ -28,3 +28,18 @@ export const initializeSigninButtons = () => {
     });
   }
 }
+
+export const addSongToMySongs = (mySongsComponent, song) => {
+  const songContainer = document.createElement('div');
+  songContainer.setAttribute('class', 'song-container');
+
+  songContainer.innerHTML = `
+    <h3>${song.songTitle} by ${song.songArtist}</h3>
+    <div>
+      <button>Edit</button>
+      <button>Delete</button>
+    </div>
+  `;
+
+  mySongsComponent.append(songContainer);
+}
