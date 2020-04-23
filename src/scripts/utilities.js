@@ -37,7 +37,7 @@ export const addSongToMySongs = (mySongsComponent, song) => {
     <h3>${song.songTitle} by ${song.songArtist}</h3>
     <div>
       <button>Edit</button>
-      <button>Delete</button>
+      <button onclick="window.deleteSong('${song.id}')">Delete</button>
     </div>
   `;
 
