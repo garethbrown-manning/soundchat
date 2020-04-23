@@ -36,9 +36,29 @@ export const readSongsFromFirestore = () => {
         songsCollection.get()
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-              songs.push(doc.data());
+              const songData = { ...doc.data(), id: doc.id };
+              songs.push(songData);
             });
             resolve(songs);
+          });
+      }
+    });
+  });
+}
+
+export const deleteSongFromFirestore = (songId) => {
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const songDocument = firestoreDb.doc(`users/${user.uid}/songs/${songId}`);
+        songDocument.delete()
+          .then(() => {
+            console.log(`The song with an id of ${songId} has been deleted successfully`);
+            resolve();
+          })
+          .catch(() => {
+            console.error(`There was an error while trying to delete song with id ${songId}.`, error);
+            resolve();
           });
       }
     });

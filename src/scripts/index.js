@@ -9,7 +9,11 @@ import {
   createEmailSigninAccount,
   anonymousSignin
 } from '../firebase/firebaseAuthentication';
-import { writeSongToFirestore, readSongsFromFirestore } from '../firebase/firebaseRepository';
+import {
+  writeSongToFirestore,
+  readSongsFromFirestore,
+  deleteSongFromFirestore
+} from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
 anonymousSignin();
@@ -57,4 +61,9 @@ if (mySongsComponent) {
         addSongToMySongs(mySongsComponent, song);
       });
     });
+}
+
+window.deleteSong = function(id) {
+  deleteSongFromFirestore(id)
+    .then(() => window.location.reload());
 }
