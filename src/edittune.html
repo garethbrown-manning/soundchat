@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Soundchat - Edit Tune</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+    <link href="https://fonts.googleapis.com/css?family=Questrial&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- App Bar -->
+    <header>
+      <a class="title-link" href="/index.html"><h2>Soundchat</h2></a>
+      <div>
+        <a href="/selectartist.html">Select Artist</a>
+        <a id="appbar-mysongs-link" href="/mysongs.html">My Songs</a>
+        <a id="appbar-addtune-button" href="/addtune.html">Add Tune</a>
+        <a id="appbar-signout-button" href="#">Sign Out</a>
+        <a id="appbar-signin-button" href="/signin.html">Sign In</a>
+      </div>
+    </header>
+
+    <!-- Main Body -->
+    <section class="center-layout">
+      <h1>Edit Tune</h1>
+      <form id="edit-tune-form">
+        <input id="song-id" type="hidden" />
+        <input id="artist-input-edit" type="text" placeholder="Artist" />
+        <input id="song-title-input-edit" type="text" placeholder="Song title" />
+        <button>Save Changes</button>
+      </form>
+    </section>
+
+    <!-- scripts -->
+    <script type="text/javascript" src="./scripts/index.js"></script>
+  </body>
+</html>
