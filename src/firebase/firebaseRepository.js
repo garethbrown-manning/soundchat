@@ -4,7 +4,7 @@ import 'firebase/firestore';
 import { firestoreDb } from './firebaseConfiguration';
 
 export const writeSongToFirestore = (songArtist, songTitle) => {
-  // Organise the song artist and song title into an object.
+  // Organize the song artist and song title into an object.
   const song = {
     songArtist,
     songTitle
@@ -62,5 +62,49 @@ export const deleteSongFromFirestore = (songId) => {
           });
       }
     });
+  });
+}
+
+export const getSongFromFirestore = (songId) => {
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // Assign the reference to the song document using songId
+        const songDocument = firestoreDb.doc(`users/${user.uid}/songs/${songId}`);
+
+        // Get the song data from Firestore
+        songDocument.get()
+          .then((doc) => {
+            if (doc.exists) {
+              const songData = { ...doc.data(), id: doc.id };
+              resolve(songData);
+            }
+          })
+          .catch((error) => {
+            console.error(`There was an error while trying to get song with id ${songId}`, error);
+            resolve();
+          });
+      }
+    });
+  });
+}
+
+export const updateSongInFirebase = (song) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // Assign the reference to the song document using songId
+      const songDocument = firestoreDb.doc(`users/${user.uid}/songs/${song.id}`);
+
+      // Create a new song object
+      const updatedSong = {
+        songArtist: song.songArtist,
+        songTitle: song.songTitle
+      }
+
+      // Update the song with the new song object including songArtist and songTitle
+      songDocument.update(updatedSong)
+        .then(() => console.log('Your song was updated successfully: ', song))
+        .catch((error) => console.error('There was an error while updating your song: ', song, error));
+    }
   });
 }
