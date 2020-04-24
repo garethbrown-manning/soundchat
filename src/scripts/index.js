@@ -12,7 +12,8 @@ import {
 import {
   writeSongToFirestore,
   readSongsFromFirestore,
-  deleteSongFromFirestore
+  deleteSongFromFirestore,
+  getSongFromFirestore
 } from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
@@ -66,4 +67,18 @@ if (mySongsComponent) {
 window.deleteSong = function(id) {
   deleteSongFromFirestore(id)
     .then(() => window.location.reload());
+}
+
+const editSongForm = document.getElementById('edit-tune-form');
+if (editSongForm) {
+  const searchParams = new URLSearchParams(location.search);
+  const songId = searchParams.get('id');
+  // Get song from Firestore
+  getSongFromFirestore(songId)
+    .then((song) => {
+      // Populate the form with song artist, song title and song id
+      editSongForm.elements['song-id'].value = song.id;
+      editSongForm.elements['artist-input-edit'].value = song.songArtist;
+      editSongForm.elements['song-title-input-edit'].value = song.songTitle;
+    });
 }

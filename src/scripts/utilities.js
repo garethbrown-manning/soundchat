@@ -36,7 +36,7 @@ export const addSongToMySongs = (mySongsComponent, song) => {
   songContainer.innerHTML = `
     <h3>${song.songTitle} by ${song.songArtist}</h3>
     <div>
-      <button>Edit</button>
+      <a href="/edittune.html?id=${song.id}"><button>Edit</button></a>
       <button onclick="window.deleteSong('${song.id}')">Delete</button>
     </div>
   `;

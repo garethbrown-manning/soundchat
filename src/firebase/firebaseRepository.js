@@ -64,3 +64,27 @@ export const deleteSongFromFirestore = (songId) => {
     });
   });
 }
+
+export const getSongFromFirestore = (songId) => {
+  return new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // Assign the reference to the song document using songId
+        const songDocument = firestoreDb.doc(`users/${user.uid}/songs/${songId}`);
+
+        // Get the song data from Firestore
+        songDocument.get()
+          .then((doc) => {
+            if (doc.exists) {
+              const songData = { ...doc.data(), id: doc.id };
+              resolve(songData);
+            }
+          })
+          .catch((error) => {
+            console.error(`There was an error while trying to get song with id ${songId}`, error);
+            resolve();
+          });
+      }
+    });
+  });
+}
