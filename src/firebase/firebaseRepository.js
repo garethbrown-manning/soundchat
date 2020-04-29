@@ -1,13 +1,14 @@
 import firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { firestoreDb } from './firebaseConfiguration';
+import { firestoreDb, cloudStorage } from './firebaseConfiguration';
 
-export const writeSongToFirestore = (songArtist, songTitle) => {
+export const writeSongToFirestore = (songArtist, songTitle, songFile) => {
   // Organize the song artist and song title into an object.
   const song = {
     songArtist,
-    songTitle
+    songTitle,
+    songFileName: songFile.name
   };
 
   firebase.auth().onAuthStateChanged((user) => {
@@ -17,10 +18,42 @@ export const writeSongToFirestore = (songArtist, songTitle) => {
 
       // Add the song to a document in the songs collection and log the document id.
       songsCollection.add(song)
-        .then((docRef) => console.log('Song document Id: ', docRef.id))
+        .then((docRef) => {
+          console.log('Song document Id: ', docRef.id);
+          saveSongFile(docRef.id, songFile);
+        })
         .catch((error) => console.error('There was an error while writing a song to firestore: ', error));
     }
   });
+}
+
+const saveSongFile = (docRefId, songFile) => {
+  // Create a reference to the file path in Cloud Storage.
+  // This will create the path if it does not already exist.
+  const fileRef = cloudStorage.ref(`songs/${docRefId}-${songFile.name}`);
+
+  // Upload the file to Cloud Storage.
+  const uploadTask = fileRef.put(songFile);
+
+  // The returned task can indicate changes in the state of the file upload.
+  uploadTask.on('state_changed',
+
+    // The progress function can indicate how many bytes have been transferred to Cloud Storage.
+    function progress(snapshot) {
+      console.log('Bytes transferred: ', snapshot.bytesTransferred);
+      console.log('Total bytes: ', snapshot.totalBytes);
+    },
+
+    // The error function will be called if there is an error while the file is uploading.
+    function error(error) {
+      console.error('There was an error while saving to Cloud Storage: ', error);
+    },
+
+    // The complete function will be called once the upload has completed successfully.
+    function complete() {
+      console.log('File successfully saved to Cloud Storage');
+    }
+  );
 }
 
 export const readSongsFromFirestore = () => {
