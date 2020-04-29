@@ -51,7 +51,8 @@ if (createTuneForm) {
     event.preventDefault();
     const songArtist = event.target['artist-input'].value;
     const songTitle = event.target['song-title-input'].value;
-    writeSongToFirestore(songArtist, songTitle);
+    const songFile = event.target['song-file'].files[0];
+    writeSongToFirestore(songArtist, songTitle, songFile);
   }
 }
 
