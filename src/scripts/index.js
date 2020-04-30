@@ -14,7 +14,8 @@ import {
   readSongsFromFirestore,
   deleteSongFromFirestore,
   getSongFromFirestore,
-  updateSongInFirebase
+  updateSongInFirebase,
+  getAudioFromStorage
 } from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
@@ -93,4 +94,14 @@ if (editSongForm) {
     const song = { id, songArtist, songTitle };
     updateSongInFirebase(song);
   }
+}
+
+const audioElement = document.getElementById('audio-component');
+if (audioElement) {
+  const searchParams = new URLSearchParams(location.search);
+  const fileName = searchParams.get('filename');
+  getAudioFromStorage(fileName)
+    .then((fileUrl) => {
+      audioElement.setAttribute('src', fileUrl);
+    });
 }
