@@ -141,3 +141,15 @@ export const updateSongInFirebase = (song) => {
     }
   });
 }
+
+export const getAudioFromStorage = (fileName) => {
+  return new Promise((resolve) => {
+    // Get the reference to the file in Cloud Storage
+    const fileRef = cloudStorage.ref(`songs/${fileName}`);
+
+    // Get the URL for the song file in Cloud Storage
+    fileRef.getDownloadURL()
+      .then((url) => resolve(url))
+      .catch((error) => console.error('There was an error while retrieving a file from Cloud Storage', error));
+  });
+}
