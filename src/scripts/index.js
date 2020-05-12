@@ -100,7 +100,8 @@ const audioElement = document.getElementById('audio-component');
 if (audioElement) {
   const searchParams = new URLSearchParams(location.search);
   const fileName = searchParams.get('filename');
-  getAudioFromStorage(fileName)
+  const userId = searchParams.get('userid');
+  getAudioFromStorage(userId, fileName)
     .then((fileUrl) => {
       audioElement.setAttribute('src', fileUrl);
     });
