@@ -82,6 +82,17 @@ img {
   align-self: center;
 }
 
+/* Select Artist */
+
+#select-artist {
+  display: flex;
+  flex-direction: column;
+}
+
+#select-artist a {
+  padding: 10px 0;
+}
+
 /* Sign in */
 
 #signin-google {

@@ -43,3 +43,10 @@ export const addSongToMySongs = (mySongsComponent, song) => {
 
   mySongsComponent.append(songContainer);
 }
+
+export const addArtistToList = (selectArtistElement, artist) => {
+  const artistLink = document.createElement('a');
+  artistLink.setAttribute('href', `/listen.html?userid=${artist.id}`);
+  artistLink.innerText = artist.artistName;
+  selectArtistElement.append(artistLink);
+}

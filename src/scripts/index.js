@@ -1,5 +1,12 @@
+import firebase from 'firebase';
+import 'firebase/auth';
 import '../firebase/firebaseConfiguration';
-import { assignClick, initializeSigninButtons, addSongToMySongs } from './utilities';
+import {
+  assignClick,
+  initializeSigninButtons,
+  addSongToMySongs,
+  addArtistToList
+} from './utilities';
 import {
   googleSignin,
   signOut,
@@ -15,7 +22,8 @@ import {
   deleteSongFromFirestore,
   getSongFromFirestore,
   updateSongInFirebase,
-  getAudioFromStorage
+  getAudioFromStorage,
+  getAllArtists
 } from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
@@ -59,12 +67,16 @@ if (createTuneForm) {
 
 const mySongsComponent = document.getElementById('my-songs-component');
 if (mySongsComponent) {
-  readSongsFromFirestore()
-    .then((songs) => {
-      songs.forEach((song) => {
-        addSongToMySongs(mySongsComponent, song);
-      });
-    });
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      readSongsFromFirestore(user.uid)
+        .then((songs) => {
+          songs.forEach((song) => {
+            addSongToMySongs(mySongsComponent, song);
+          });
+        });
+    }
+  });
 }
 
 window.deleteSong = function(id) {
@@ -81,7 +93,6 @@ if (editSongForm) {
     .then((song) => {
       // Populate the form with song artist, song title and song id
       editSongForm.elements['song-id'].value = song.id;
-      editSongForm.elements['artist-input-edit'].value = song.songArtist;
       editSongForm.elements['song-title-input-edit'].value = song.songTitle;
     });
 
@@ -89,9 +100,8 @@ if (editSongForm) {
   editSongForm.onsubmit = (event) => {
     event.preventDefault();
     const id = event.target['song-id'].value;
-    const songArtist = event.target['artist-input-edit'].value;
     const songTitle = event.target['song-title-input-edit'].value;
-    const song = { id, songArtist, songTitle };
+    const song = { id, songTitle };
     updateSongInFirebase(song);
   }
 }
@@ -104,5 +114,15 @@ if (audioElement) {
   getAudioFromStorage(userId, fileName)
     .then((fileUrl) => {
       audioElement.setAttribute('src', fileUrl);
+    });
+}
+
+const selectArtistElement = document.getElementById('select-artist');
+if (selectArtistElement) {
+  getAllArtists()
+    .then((artists) => {
+      artists.forEach((artist) => {
+        addArtistToList(selectArtistElement, artist);
+      });
     });
 }
