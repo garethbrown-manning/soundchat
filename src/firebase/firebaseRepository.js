@@ -6,7 +6,6 @@ import { firestoreDb, cloudStorage } from './firebaseConfiguration';
 export const writeSongToFirestore = (songArtist, songTitle, songFile) => {
   // Organize the song artist and song title into an object.
   const song = {
-    songArtist,
     songTitle,
     songFileName: songFile.name
   };
@@ -23,6 +22,14 @@ export const writeSongToFirestore = (songArtist, songTitle, songFile) => {
           saveSongFile(user.uid, docRef.id, songFile);
         })
         .catch((error) => console.error('There was an error while writing a song to firestore: ', error));
+
+        // Add artist to user doc if artist exists
+        if (songArtist) {
+          const userDocument = firestoreDb.doc(`users/${user.uid}`);
+          userDocument.set({
+            artistName: songArtist
+          });
+        }
     }
   });
 }
@@ -56,26 +63,25 @@ const saveSongFile = (userId, docRefId, songFile) => {
   );
 }
 
-export const readSongsFromFirestore = () => {
+export const readSongsFromFirestore = (userId) => {
   return new Promise((resolve) => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+    getArtistName(userId)
+      .then((songArtist) => {
         const songs = [];
         
         // Get the collection of songs for the current user.
-        const songsCollection = firestoreDb.collection(`users/${user.uid}/songs`);
-  
+        const songsCollection = firestoreDb.collection(`users/${userId}/songs`);
+    
         // Get all song documents from the song collection.
         songsCollection.get()
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-              const songData = { ...doc.data(), id: doc.id };
+              const songData = { ...doc.data(), id: doc.id, songArtist };
               songs.push(songData);
             });
             resolve(songs);
           });
-      }
-    });
+      });
   });
 }
 
@@ -130,11 +136,10 @@ export const updateSongInFirebase = (song) => {
 
       // Create a new song object
       const updatedSong = {
-        songArtist: song.songArtist,
         songTitle: song.songTitle
       }
 
-      // Update the song with the new song object including songArtist and songTitle
+      // Update the song with the new song object
       songDocument.update(updatedSong)
         .then(() => console.log('Your song was updated successfully: ', song))
         .catch((error) => console.error('There was an error while updating your song: ', song, error));
@@ -151,5 +156,37 @@ export const getAudioFromStorage = (userId, fileName) => {
     fileRef.getDownloadURL()
       .then((url) => resolve(url))
       .catch((error) => console.error('There was an error while retrieving a file from Cloud Storage', error));
+  });
+}
+
+export const getArtistName = (userId) => {
+  return new Promise((resolve) => {
+    // Get reference to the user document
+    const userDocument = firestoreDb.doc(`users/${userId}`);
+
+    // Get the user's artist name
+    userDocument.get()
+      .then((doc) => {
+        if (doc.exists) {
+          resolve(doc.data().artistName);
+        }
+      });
+  });
+}
+
+export const getAllArtists = () => {
+  return new Promise((resolve) => {
+    // Get all the artist names
+    let artists = [];
+
+    const userCollection = firestoreDb.collection('users');
+    userCollection.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((docRef) => {
+          const artist = { ...docRef.data(), id: docRef.id }
+          artists.push(artist);
+        });
+        resolve(artists);
+      });
   });
 }
