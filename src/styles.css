@@ -125,3 +125,10 @@ img {
 audio {
   width: 100%;
 }
+
+select {
+  border: solid 1px black;
+  height: 50px;
+  font-size: 18px;
+  margin-bottom: 10px;
+}

@@ -23,7 +23,8 @@ import {
   getSongFromFirestore,
   updateSongInFirebase,
   getAudioFromStorage,
-  getAllArtists
+  getAllArtists,
+  getArtistName
 } from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
@@ -107,14 +108,44 @@ if (editSongForm) {
 }
 
 const audioElement = document.getElementById('audio-component');
-if (audioElement) {
+const artistNameElement = document.getElementById('artist-name');
+const songSelectElement = document.getElementById('song-select');
+if (audioElement && artistNameElement && songSelectElement) {
+
+  // Get search params
   const searchParams = new URLSearchParams(location.search);
-  const fileName = searchParams.get('filename');
   const userId = searchParams.get('userid');
-  getAudioFromStorage(userId, fileName)
-    .then((fileUrl) => {
-      audioElement.setAttribute('src', fileUrl);
+
+  // Set artist name
+  getArtistName(userId)
+    .then((artistName) => {
+      artistNameElement.innerText = artistName;
     });
+
+  // Set all songs for the user id
+  readSongsFromFirestore(userId)
+    .then((songs) => {
+      songs.forEach((song) =>  {
+        const optionElement = document.createElement('option');
+        optionElement.setAttribute('data-songid', song.id);
+        optionElement.setAttribute('data-filename', song.songFileName);
+        optionElement.innerText = song.songTitle;
+        songSelectElement.append(optionElement);
+      });
+    });
+
+  songSelectElement.onchange = (event) => {
+    const selectedOption = event.target.selectedOptions[0];
+    const songId = selectedOption.dataset.songid;
+    const fullFileName = `${songId}-${selectedOption.dataset.filename}`;
+    
+    // Set audio src
+    getAudioFromStorage(userId, fullFileName)
+      .then((fileUrl) => {
+        audioElement.setAttribute('src', fileUrl);
+      });
+  }
+  
 }
 
 const selectArtistElement = document.getElementById('select-artist');
