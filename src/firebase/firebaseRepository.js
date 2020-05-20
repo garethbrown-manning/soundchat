@@ -190,3 +190,36 @@ export const getAllArtists = () => {
       });
   });
 }
+
+export const saveCommentToFirestore = (commentText, songId) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      const commentCollection = firestoreDb.collection(`comments`);
+      const userName = user.displayName ? user.displayName : 'Anonymous';
+      commentCollection.add({
+        userName,
+        songId,
+        commentText,
+        date: Date.now()
+      })
+        .then(() => console.log('Comment successfully added to firestore'))
+        .catch((error) => console.error('There was an error when trying to add your comment to firestore: ', error));
+    }
+  });
+}
+
+export const getCommentsForSong = (songId) => {
+  return new Promise((resolve) => {
+    const commentCollection = firestoreDb.collection('comments')
+      .where("songId", "==", songId);
+
+    const comments = [];
+    commentCollection.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((comment) => {
+          comments.push(comment.data());
+        });
+        resolve(comments);
+      });
+  });
+}
