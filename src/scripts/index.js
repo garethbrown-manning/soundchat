@@ -5,7 +5,8 @@ import {
   assignClick,
   initializeSigninButtons,
   addSongToMySongs,
-  addArtistToList
+  addArtistToList,
+  addCommentToContainer
 } from './utilities';
 import {
   googleSignin,
@@ -24,7 +25,9 @@ import {
   updateSongInFirebase,
   getAudioFromStorage,
   getAllArtists,
-  getArtistName
+  getArtistName,
+  saveCommentToFirestore,
+  getCommentsForSong
 } from '../firebase/firebaseRepository';
 
 initializeSigninButtons();
@@ -110,7 +113,8 @@ if (editSongForm) {
 const audioElement = document.getElementById('audio-component');
 const artistNameElement = document.getElementById('artist-name');
 const songSelectElement = document.getElementById('song-select');
-if (audioElement && artistNameElement && songSelectElement) {
+const commentsContainer = document.getElementById('comments-container');
+if (audioElement && artistNameElement && songSelectElement && commentsContainer) {
 
   // Get search params
   const searchParams = new URLSearchParams(location.search);
@@ -144,6 +148,13 @@ if (audioElement && artistNameElement && songSelectElement) {
       .then((fileUrl) => {
         audioElement.setAttribute('src', fileUrl);
       });
+
+    // Get all song related comments
+    commentsContainer.innerHTML = ''; // Clear all comments from element first
+    getCommentsForSong(songId)
+      .then((comments) =>  {
+        comments.forEach((comment) => addCommentToContainer(comment, commentsContainer));
+      });
   }
   
 }
@@ -156,4 +167,16 @@ if (selectArtistElement) {
         addArtistToList(selectArtistElement, artist);
       });
     });
+}
+
+const addCommentForm = document.getElementById('add-comment-form');
+if (addCommentForm) {
+  addCommentForm.onsubmit = (event) => {
+    event.preventDefault();
+    const commentText = event.target['comment-text'].value;
+    const songSelect = document.getElementById('song-select');
+    const selectedOption = songSelect.selectedOptions[0];
+    const songId = selectedOption.dataset.songid;
+    saveCommentToFirestore(commentText, songId);
+  }
 }
