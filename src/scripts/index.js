@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import 'firebase/auth';
-import '../firebase/firebaseConfiguration';
+import { firestoreDb } from '../firebase/firebaseConfiguration';
 import {
   assignClick,
   initializeSigninButtons,
@@ -150,13 +150,17 @@ if (audioElement && artistNameElement && songSelectElement && commentsContainer)
       });
 
     // Get all song related comments
-    commentsContainer.innerHTML = ''; // Clear all comments from element first
-    getCommentsForSong(songId)
-      .then((comments) =>  {
-        comments.forEach((comment) => addCommentToContainer(comment, commentsContainer));
+    window.unsubscribe && window.unsubscribe();
+    window.unsubscribe = firestoreDb.collection('comments')
+      .where('songId', '==', songId)
+      .orderBy('date', 'desc')
+      .onSnapshot((querySnapshot) => {
+        commentsContainer.innerHTML = ''; // Clear all comments from element first
+        querySnapshot.forEach((comment) => {
+          addCommentToContainer(comment.data(), commentsContainer);
+        });
       });
   }
-  
 }
 
 const selectArtistElement = document.getElementById('select-artist');
