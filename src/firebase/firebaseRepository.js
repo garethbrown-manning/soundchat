@@ -197,6 +197,7 @@ export const saveCommentToFirestore = (commentText, songId) => {
       const commentCollection = firestoreDb.collection(`comments`);
       const userName = user.displayName ? user.displayName : 'Anonymous';
       commentCollection.add({
+        userId: user.uid,
         userName,
         songId,
         commentText,
