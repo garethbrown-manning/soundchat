@@ -4,14 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel ./src/*.html --no-cache",
-    "build": "parcel build ./src/*.html --out-dir build"
+    "help-serve": "broccoli serve --help",
+    "start": "broccoli serve --port 1234",
+    "help-build": "broccoli build --help",
+    "build": "broccoli build --output-path build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "broccoli": "^3.5.0",
+    "broccoli-cli": "^1.0.0"
   },
   "dependencies": {
     "firebase": "^7.7.0"
